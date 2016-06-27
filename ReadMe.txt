@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> e0691f7603ea42c2643bb42e847e98352bb8ae9d
 Application Description
 =============================
 A legacy shopping cart application, where users places their order via uploading a csv file describing order details.
@@ -20,15 +16,6 @@ orders jms queue is a temporary storage of orders before they get moved to order
 Following is the route for order processing
 file:placeorder -> jms:incommingorders -> jms:order -> file:orders
 
-<<<<<<< HEAD
------------------------------------------
-
-=======
---------------------------------------------------------------
-
-=======
->>>>>>> origin/master
->>>>>>> e0691f7603ea42c2643bb42e847e98352bb8ae9d
 To run this example project build the project and execute the Camel routes 
 according to the steps below. 
 
@@ -54,17 +41,7 @@ Try executing with:
 
   mvn exec:java
 
-<<<<<<< HEAD
-This will load up the Camel application 
-=======
-<<<<<<< HEAD
 This will load up the Camel application. 
-=======
-This will load up the Camel application as described in the article. 
->>>>>>> origin/master
->>>>>>> e0691f7603ea42c2643bb42e847e98352bb8ae9d
-
-Running Tests
 ============================
 
 You will probably find it much more useful to run the tests included with
@@ -117,32 +94,5 @@ Use m2eclipse to import the project(s). In Eclipse,
   - Browse to the directory where you extracted the example
   - You should now be able to select the project to import
 ============================
-
-<<<<<<< HEAD
-
-=======
-<<<<<<< HEAD
-=======
-Application Description
-=============================
-A legacy shopping cart application, where users places their order via uploading a csv file describing order details.
-A new system is needed to support web clients to place order using Http api interface.
-Solution should support both old bulk ordering as well as new web interface to be integrated with ordering system.
-
-Solution is:
-----------------------
-Old legacy system should upload a order file to a FTP directory 'placeorder'.
-Form this directory order description files moves to jms queue (incommingorders).
-Http web interface (REST) application should put order details to jms queue (incommingorders).
-From jms queue (incommingorders) orders are being moved to jms queue orders for order processing system.
-Order processing system reads orders from jms queue and moves processed orders to orders directory.
-orders jms queue is a temporary storage of orders before they get moved to orders directory.
-
-Following is the route for order processing
-file:placeorder -> jms:incommingorders -> jms:order -> file:orders
-
------------------------------------------
->>>>>>> origin/master
->>>>>>> e0691f7603ea42c2643bb42e847e98352bb8ae9d
 You can also play with test files provided to experiment and understand the use case.
 I hope this will help 
