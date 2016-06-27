@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans" 
+       xmlns:amq="http://activemq.apache.org/schema/core" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+                           http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+                           http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
+
+  <amq:broker brokerName="localhost" persistent="false" useJmx="false"/>
+
+  <bean class="org.apache.activemq.camel.component.ActiveMQComponent" id="jms">
+    <property name="brokerURL" value="vm://localhost"/>
+  </bean>
+
+  <camelContext id="camel_context" xmlns="http://camel.apache.org/schema/spring">
+    <route id="FileToJMS">
+        <from uri="file:target/placeorder"/>
+        <to uri="jms:incomingOrders"/>
+    </route>
+    
+    <route id="HTTPtoJMS">
+        <from uri="jetty:http://0.0.0.0:8888/placeorder"/>
+        <inOnly uri="jms:incomingOrders"/>
+        <transform>
+            <constant>200</constant>
+        </transform>
+    </route>
+    
+    <route id="NormalizeMessageData">
+        <from uri="jms:incomingOrders"/>
+        <convertBodyTo type="java.lang.String"/>
+        <choice>
+            <when>
+                <simple>${body} contains '?xml'</simple>
+                <unmarshal>                    
+                    <jaxb contextPath="org.camel.mycart"/>
+                </unmarshal>
+                <to uri="jms:orders"/>
+            </when>
+            <otherwise>
+                <unmarshal>                    
+                    <bindy packages="org.camel.mycart" type="Csv"/>
+                </unmarshal>
+                <to uri="jms:orders"/>
+            </otherwise>
+        </choice>
+    </route>
+    <!--This is replaced with mock endpoint (TestRouter.java
+    <route id="NormalizeMessageData1">
+        <from uri="jms:orders"/>
+        <convertBodyTo type="java.lang.String"/>
+        <to uri="file:target/orders"/>
+    </route>
+    -->
+  </camelContext>
+
+</beans>
